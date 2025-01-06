@@ -7,187 +7,184 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            margin: 20px;
+            background-color: #f4f4f4;
             color: #333;
-            margin: 0;
-            padding: 0;
         }
 
         header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 0;
             text-align: center;
+            background-color: #4CAF50;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
         }
 
-        header h1 {
-            font-size: 2.5em;
+        h1 {
             margin: 0;
+            font-size: 2em;
         }
 
-        .container {
-            width: 80%;
-            margin: 30px auto;
+        h3 {
+            color: #333;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            background-color: white;
         }
 
-        table th, table td {
+        table, th, td {
             border: 1px solid #ddd;
+        }
+
+        th, td {
             padding: 10px;
             text-align: center;
         }
 
-        table th {
-            background-color: #4CAF50;
-            color: white;
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
         }
 
-        .btn {
+        button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            font-size: 1.2em;
             cursor: pointer;
-            margin-top: 20px;
         }
 
-        .btn:hover {
+        button:hover {
             background-color: #45a049;
         }
 
-        .updated {
-            background-color: #e0f7fa;
-        }
-
         footer {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
             text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
         }
 
-        .meal-checkbox {
-            transform: scale(1.5);
+        footer p {
+            margin: 0;
         }
 
-        .date-picker {
-            font-size: 1.2em;
+        .calendar {
             margin-bottom: 20px;
         }
 
-        .member-name {
-            font-weight: bold;
-            font-size: 1.1em;
+        .calendar label {
+            margin-right: 10px;
         }
-
-        .meal-times {
-            display: flex;
-            justify-content: space-evenly;
-        }
-
-        .meal-times div {
-            margin: 0 10px;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-container input {
-            margin-left: 10px;
-        }
-
     </style>
 </head>
 <body>
-
     <header>
         <h1>মেস মিল ট্র্যাকার</h1>
     </header>
 
-    <div class="container">
-        <h3>তারিখ নির্বাচন করুন:</h3>
-        <input type="date" id="datePicker" class="date-picker">
-        
-        <h3>মিল আপডেট করুন:</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>নাম</th>
-                    <th>সকাল</th>
-                    <th>দুপুর</th>
-                    <th>রাত</th>
-                    <th>মিল সংখ্যা</th>
-                </tr>
-            </thead>
-            <tbody id="mealTable">
-                <!-- সদস্যদের নাম এবং মিল টেবিল এখানে দেখানো হবে -->
-            </tbody>
-        </table>
-
-        <button class="btn" onclick="updateMealCount()">মিল আপডেট করুন</button>
+    <div class="calendar">
+        <label for="datePicker">তারিখ নির্বাচন করুন:</label>
+        <input type="date" id="datePicker" value="">
     </div>
 
+    <h3>আজকের মিল হিসাব</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>নাম</th>
+                <th>সকাল</th>
+                <th>দুপুর</th>
+                <th>রাত</th>
+            </tr>
+        </thead>
+        <tbody id="mealTable">
+            <!-- সদস্যদের তথ্য এখানে ডায়নামিকভাবে যোগ করা হবে -->
+        </tbody>
+    </table>
+
+    <button class="btn" onclick="updateMealCount()">মিল আপডেট করুন</button>
+
+    <h3>মাসিক মিল সংযোগ</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>নাম</th>
+                <th>মোট মিল</th>
+            </tr>
+        </thead>
+        <tbody id="monthlyMealTable">
+            <!-- মাসিক মিল যোগফল এখানে দেখানো হবে -->
+        </tbody>
+    </table>
+
     <footer>
-        <p>Developed by <strong>Mission Infinity</strong></p>
+        <p>Developed by:Md Habibur Rahman Mahi </p>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAE3GEe85kVgGjFs-AabYc6iaOIYyEaxqg",
-            authDomain: "mission-infinity.firebaseapp.com",
-            projectId: "mission-infinity",
-            storageBucket: "mission-infinity.appspot.com",
-            messagingSenderId: "226312029801",
-            appId: "1:226312029801:web:bf0a7092df65c505c104f8",
-            measurementId: "G-V3G1C32M1G"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database(app);
-
         // সদস্যদের নাম তালিকা
-        const members = ["হাবিব", "রাজু", "সামসুল", "সায়েম", "শিপন", "তানভীর"];
+        const members = ["হাবিব", "শামসুল", "রাজু", "তানভীর", "সায়েম", "শিপন"];
         let dailyMeals = {};
+        let monthlyMeals = {};
         let selectedDate = new Date().toISOString().split('T')[0]; // আজকের তারিখ
 
-        // Firebase থেকে মিল ডাটা লোড করার জন্য
-        function loadMealDataFromFirebase() {
-            const mealDataRef = database.ref("meals/" + selectedDate);
-            mealDataRef.once("value", (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    Object.keys(data).forEach(member => {
-                        dailyMeals[member] = data[member];
-                    });
-                    updateMealTable();
-                } else {
-                    // যদি ডেটা না থাকে, নতুন ডেটা তৈরি করি
-                    members.forEach(member => {
-                        dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0, total: 0 };
-                    });
-                    updateMealTable();
-                }
+        // টেবিল লোড করার ফাংশন
+        function loadTable() {
+            const mealTable = document.getElementById("mealTable");
+            const monthlyMealTable = document.getElementById("monthlyMealTable");
+
+            // LocalStorage থেকে সেভ করা মিল ডেটা লোড করুন
+            const savedDailyMeals = localStorage.getItem("dailyMeals");
+            const savedMonthlyMeals = localStorage.getItem("monthlyMeals");
+
+            if (savedDailyMeals && savedMonthlyMeals) {
+                dailyMeals = JSON.parse(savedDailyMeals);
+                monthlyMeals = JSON.parse(savedMonthlyMeals);
+            } else {
+                // যদি কোন সেভ করা ডেটা না থাকে, তবে নতুন করে ডেটা ইনিশিয়ালাইজ করুন
+                members.forEach(member => {
+                    dailyMeals[member] = { Breakfast: 0, Lunch: 0, Dinner: 0 };
+                    monthlyMeals[member] = 0;
+                });
+            }
+
+            // সদস্যদের জন্য টেবিল তৈরি করুন
+            members.forEach(member => {
+                // দৈনিক মিল টেবিল
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${member}</td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Breakfast" ${dailyMeals[member].Breakfast > 0 ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Lunch" ${dailyMeals[member].Lunch > 0 ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Dinner" ${dailyMeals[member].Dinner > 0 ? "checked" : ""}></td>
+                `;
+                mealTable.appendChild(row);
+
+                // মাসিক মিল টেবিল
+                const monthlyRow = document.createElement("tr");
+                monthlyRow.innerHTML = `
+                    <td>${member}</td>
+                    <td id="${member}-monthly-count">${monthlyMeals[member]}</td>
+                `;
+                monthlyMealTable.appendChild(monthlyRow);
             });
+
+            // তারিখ পিকার সেট করুন
+            document.getElementById("datePicker").value = selectedDate;
         }
 
-        // মিল হিসাব আপডেট করুন
+        // তারিখ পরিবর্তনের ইভেন্ট
+        document.getElementById("datePicker").addEventListener("change", function () {
+            selectedDate = this.value;
+            alert(`তারিখ পরিবর্তন করা হয়েছে: ${selectedDate}`);
+        });
+
+        // মিল আপডেট করার ফাংশন
         function updateMealCount() {
             const checkboxes = document.querySelectorAll(".meal-checkbox");
             checkboxes.forEach(checkbox => {
@@ -195,79 +192,36 @@
                 const time = checkbox.dataset.time;
 
                 if (checkbox.checked) {
-                    dailyMeals[member][time] = 1;
+                    // সকালের মিল 0.5 এবং অন্যান্য মিল 1 গণনা করা হচ্ছে
+                    dailyMeals[member][time] = (time === "Breakfast") ? 0.5 : 1;
                 } else {
                     dailyMeals[member][time] = 0;
                 }
             });
 
-            // মোট মিল সংখ্যা আপডেট করুন
-            members.forEach(member => {
-                dailyMeals[member].total = dailyMeals[member].সকাল + dailyMeals[member].দুপুর + dailyMeals[member].রাত;
+            // মাসিক মিল আপডেট করা হচ্ছে
+            Object.keys(dailyMeals).forEach(member => {
+                const totalMeals = Object.values(dailyMeals[member]).reduce((a, b) => a + b, 0);
+                monthlyMeals[member] += totalMeals;
+                document.getElementById(`${member}-monthly-count`).innerText = monthlyMeals[member];
             });
 
-            // Firebase এ মিল ডাটা আপডেট
-            database.ref("meals/" + selectedDate).set(dailyMeals);
+            // LocalStorage-এ ডেটা সেভ করা হচ্ছে
+            localStorage.setItem("dailyMeals", JSON.stringify(dailyMeals));
+            localStorage.setItem("monthlyMeals", JSON.stringify(monthlyMeals));
+
+            // দৈনিক মিল রিসেট করা হচ্ছে
+            Object.keys(dailyMeals).forEach(member => {
+                dailyMeals[member] = { Breakfast: 0, Lunch: 0, Dinner: 0 };
+            });
+
+            // চেকবক্স রিসেট করা হচ্ছে
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+
             alert(`মিল সফলভাবে আপডেট হয়েছে! তারিখ: ${selectedDate}`);
         }
 
-        // মিল টেবিল আপডেট করুন
-        function updateMealTable() {
-            const mealTable = document.getElementById("mealTable");
-            mealTable.innerHTML = ""; // Clear previous data
-
-            members.forEach(member => {
-                const meals = dailyMeals[member] || { সকাল: 0, দুপুর: 0, রাত: 0, total: 0 };
-                const row = document.createElement("tr");
-                row.classList.add(meals.সকাল || meals.দুপুর || meals.রাত ? 'updated' : '');
-                row.innerHTML = `
-                    <td class="member-name">${member}</td>
-                    <td>
-                        <div class="checkbox-container">
-                            <label>সকাল</label>
-                            <input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="সকাল" ${meals.সকাল ? 'checked' : ''}>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="checkbox-container">
-                            <label>দুপুর</label>
-                            <input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="দুপুর" ${meals.দুপুর ? 'checked' : ''}>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="checkbox-container">
-                            <label>রাত</label>
-                            <input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="রাত" ${meals.রাত ? 'checked' : ''}>
-                        </div>
-                    </td>
-                    <td>${meals.total}</td>
-                `;
-                mealTable.appendChild(row);
-            });
-        }
-
-        // লোড করার সময় টেবিল তৈরি করুন
-        function loadTable() {
-            // প্রথমবারের জন্য ডেটা ইন্সট্যান্স তৈরি
-            members.forEach(member => {
-                dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0, total: 0 };
-            });
-
-            // তারিখ সেট করুন
-            document.getElementById("datePicker").value = selectedDate;
-
-            // Firebase থেকে ডেটা লোড করুন
-            loadMealDataFromFirebase();
-        }
-
-        // তারিখ পরিবর্তনের ইভেন্ট
-        document.getElementById("datePicker").addEventListener("change", function () {
-            selectedDate = this.value;
-            alert(`তারিখ পরিবর্তন করা হয়েছে: ${selectedDate}`);
-            loadMealDataFromFirebase();
-        });
-
-        // লোড করার সময় টেবিল তৈরি করুন
+        // পেজ লোড হলে টেবিল লোড করুন
         loadTable();
     </script>
 </body>
