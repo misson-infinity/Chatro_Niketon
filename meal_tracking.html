@@ -6,186 +6,144 @@
     <title>মেস মিল ট্র্যাকার</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
             margin: 20px;
-            background-color: #f4f4f4;
             color: #333;
         }
 
-        header {
+        h1, h3 {
             text-align: center;
-            background-color: #4CAF50;
-            padding: 20px;
-            color: white;
+            color: #4CAF50;
+        }
+
+        .calendar {
+            display: flex;
+            justify-content: center;
             margin-bottom: 20px;
         }
 
-        h1 {
-            margin: 0;
-            font-size: 2em;
+        .calendar label {
+            margin-right: 10px;
+            font-weight: bold;
         }
 
-        h3 {
-            color: #333;
+        input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
-            background-color: white;
-        }
-
-        table, th, td {
             border: 1px solid #ddd;
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: center;
+            border: 1px solid #ddd;
         }
 
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+        th {
+            background-color: #4CAF50;
+            color: white;
         }
 
-        button {
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .btn {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            font-size: 16px;
         }
 
-        button:hover {
+        .btn:hover {
             background-color: #45a049;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #555;
+        .table-container {
+            width: 90%;
+            margin: 0 auto;
         }
 
-        footer p {
-            margin: 0;
-        }
-
-        .calendar {
-            margin-bottom: 20px;
-        }
-
-        .calendar label {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>মেস মিল ট্র্যাকার</h1>
-    </header>
+
+    <h1>মেস মিল ট্র্যাকার</h1>
 
     <div class="calendar">
         <label for="datePicker">তারিখ নির্বাচন করুন:</label>
         <input type="date" id="datePicker" value="">
     </div>
 
-    <h3>আজকের মিল হিসাব</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>নাম</th>
-                <th>সকাল</th>
-                <th>দুপুর</th>
-                <th>রাত</th>
-            </tr>
-        </thead>
-        <tbody id="mealTable">
-            <!-- সদস্যদের তথ্য এখানে ডায়নামিকভাবে যোগ করা হবে -->
-        </tbody>
-    </table>
+    <div class="table-container">
+        <h3>আজকের মিল হিসাব</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>নাম</th>
+                    <th>সকাল</th>
+                    <th>দুপুর</th>
+                    <th>রাত</th>
+                </tr>
+            </thead>
+            <tbody id="mealTable">
+                <!-- সদস্যদের তথ্য এখানে ডায়নামিকভাবে যোগ করা হবে -->
+            </tbody>
+        </table>
 
-    <button class="btn" onclick="updateMealCount()">মিল আপডেট করুন</button>
+        <button class="btn" onclick="updateMealCount()">মিল আপডেট করুন</button>
 
-    <h3>মাসিক মিল সংযোগ</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>নাম</th>
-                <th>মোট মিল</th>
-            </tr>
-        </thead>
-        <tbody id="monthlyMealTable">
-            <!-- মাসিক মিল যোগফল এখানে দেখানো হবে -->
-        </tbody>
-    </table>
+        <h3>মাসিক মিল সংযোগ</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>নাম</th>
+                    <th>মোট মিল</th>
+                </tr>
+            </thead>
+            <tbody id="monthlyMealTable">
+                <!-- মাসিক মিল যোগফল এখানে দেখানো হবে -->
+            </tbody>
+        </table>
+    </div>
 
-    <footer>
-        <p>Developed by: [Your Name or Developer]</p>
-    </footer>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import Firebase functions
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAE3GEe85kVgGjFs-AabYc6iaOIYyEaxqg",
-            authDomain: "mission-infinity.firebaseapp.com",
-            projectId: "mission-infinity",
-            storageBucket: "mission-infinity.firebasestorage.app",
-            messagingSenderId: "226312029801",
-            appId: "1:226312029801:web:bf0a7092df65c505c104f8",
-            measurementId: "G-V3G1C32M1G"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
+    <script>
         // সদস্যদের নাম তালিকা
         const members = ["হাবিব", "শামসুল", "রাজু", "তানভীর", "সায়েম", "শিপন"];
         let dailyMeals = {};
         let monthlyMeals = {};
         let selectedDate = new Date().toISOString().split('T')[0]; // আজকের তারিখ
 
-        // টেবিল লোড করার ফাংশন
-        async function loadMealsFromFirestore() {
-            const mealDocRef = doc(db, "mealRecords", selectedDate);  // Firestore ডকুমেন্ট রেফারেন্স
-            const mealDoc = await getDoc(mealDocRef);
-            
-            if (mealDoc.exists()) {
-                dailyMeals = mealDoc.data().dailyMeals || {};
-                monthlyMeals = mealDoc.data().monthlyMeals || {};
-            } else {
-                // যদি ডেটা না থাকে, তাহলে ডিফল্টভাবে সকল সদস্যের জন্য 0 মিল সেট করুন
-                members.forEach(member => {
-                    dailyMeals[member] = { Breakfast: 0, Lunch: 0, Dinner: 0 };
-                    monthlyMeals[member] = 0;
-                });
-            }
-
-            updateUIWithMeals();  // UI আপডেট করার ফাংশন
-        }
-
-        // UI আপডেট করার ফাংশন
-        function updateUIWithMeals() {
+        // শুরুতে টেবিল লোড
+        function loadTable() {
             const mealTable = document.getElementById("mealTable");
             const monthlyMealTable = document.getElementById("monthlyMealTable");
 
-            // সদস্যদের জন্য টেবিল তৈরি করুন
             members.forEach(member => {
                 // দৈনিক মিল টেবিল
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${member}</td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Breakfast" ${dailyMeals[member].Breakfast > 0 ? "checked" : ""}></td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Lunch" ${dailyMeals[member].Lunch > 0 ? "checked" : ""}></td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Dinner" ${dailyMeals[member].Dinner > 0 ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="সকাল"></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="দুপুর"></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="রাত"></td>
                 `;
                 mealTable.appendChild(row);
 
@@ -193,22 +151,26 @@
                 const monthlyRow = document.createElement("tr");
                 monthlyRow.innerHTML = `
                     <td>${member}</td>
-                    <td id="${member}-monthly-count">${monthlyMeals[member]}</td>
+                    <td id="${member}-monthly-count">0</td>
                 `;
                 monthlyMealTable.appendChild(monthlyRow);
+
+                // প্রথমবারের জন্য ডেটা ইন্সট্যান্স তৈরি
+                dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0 };
+                monthlyMeals[member] = 0;
             });
 
-            // তারিখ পিকার সেট করুন
+            // তারিখ সেট করুন
             document.getElementById("datePicker").value = selectedDate;
         }
 
         // তারিখ পরিবর্তনের ইভেন্ট
         document.getElementById("datePicker").addEventListener("change", function () {
             selectedDate = this.value;
-            loadMealsFromFirestore();  // নতুন তারিখের মিল লোড হবে
+            alert(`তারিখ পরিবর্তন করা হয়েছে: ${selectedDate}`);
         });
 
-        // মিল আপডেট করার ফাংশন
+        // দৈনিক মিল আপডেট
         function updateMealCount() {
             const checkboxes = document.querySelectorAll(".meal-checkbox");
             checkboxes.forEach(checkbox => {
@@ -216,44 +178,33 @@
                 const time = checkbox.dataset.time;
 
                 if (checkbox.checked) {
-                    // সকালের মিল 0.5 এবং অন্যান্য মিল 1 গণনা করা হচ্ছে
-                    dailyMeals[member][time] = (time === "Breakfast") ? 0.5 : 1;
+                    // সকালের মিল হাফ গণনা
+                    dailyMeals[member][time] = (time === "সকাল") ? 0.5 : 1;
                 } else {
                     dailyMeals[member][time] = 0;
                 }
             });
 
-            // মাসিক মিল আপডেট করা হচ্ছে
+            // মাসিক মিল আপডেট
             Object.keys(dailyMeals).forEach(member => {
                 const totalMeals = Object.values(dailyMeals[member]).reduce((a, b) => a + b, 0);
                 monthlyMeals[member] += totalMeals;
                 document.getElementById(`${member}-monthly-count`).innerText = monthlyMeals[member];
             });
 
-            // Firestore-এ ডেটা সেভ করা
-            updateMealsToFirestore();
+            // দৈনিক মিল রিসেট
+            Object.keys(dailyMeals).forEach(member => {
+                dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0 };
+            });
 
-            // চেকবক্স রিসেট করা হচ্ছে
+            // চেকবক্স রিসেট
             checkboxes.forEach(checkbox => checkbox.checked = false);
+
             alert(`মিল সফলভাবে আপডেট হয়েছে! তারিখ: ${selectedDate}`);
         }
 
-        // Firestore-এ ডেটা সেভ করার ফাংশন
-        async function updateMealsToFirestore() {
-            const mealDocRef = doc(db, "mealRecords", selectedDate);  // Firestore ডকুমেন্ট রেফারেন্স
-            try {
-                await setDoc(mealDocRef, {
-                    dailyMeals: dailyMeals,
-                    monthlyMeals: monthlyMeals
-                });
-                console.log("Meals updated successfully!");
-            } catch (e) {
-                console.error("Error updating meals: ", e);  // কোনো সমস্যা হলে এটি কনসোল আউটপুট হবে
-            }
-        }
-
-        // পেজ লোড হলে টেবিল লোড করুন
-        loadMealsFromFirestore();
+        // লোড করার সময় টেবিল তৈরি করুন
+        loadTable();
     </script>
 </body>
 </html>
