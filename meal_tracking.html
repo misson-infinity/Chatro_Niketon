@@ -5,45 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>মেস মিল ট্র্যাকার</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-        .btn {
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #45a049;
-        }
-        .calendar {
-            margin-bottom: 20px;
-        }
-        .calendar label {
-            margin-right: 10px;
-        }
+        /* স্টাইল এর কোড এখানে রাখুন */
     </style>
 </head>
 <body>
     <h1>মেস মিল ট্র্যাকার</h1>
     <div class="calendar">
         <label for="datePicker">তারিখ নির্বাচন করুন:</label>
-        <input type="date" id="datePicker" value="">
+        <input type="date" id="datePicker">
     </div>
     <h3>আজকের মিল হিসাব</h3>
     <table>
@@ -59,7 +28,7 @@
             <!-- সদস্যদের তথ্য এখানে ডায়নামিকভাবে যোগ করা হবে -->
         </tbody>
     </table>
-    <button class="btn" onclick="updateMealCount()">মিল আপডেট করুন</button>
+    <button onclick="updateMealCount()">মিল আপডেট করুন</button>
     <h3>মাসিক মিল সংযোগ</h3>
     <table>
         <thead>
@@ -72,11 +41,12 @@
             <!-- মাসিক মিল যোগফল এখানে দেখানো হবে -->
         </tbody>
     </table>
+
     <script>
         // সদস্যদের নাম তালিকা
         const members = ["হাবিব", "শামসুল", "রাজু", "তানভীর", "সায়েম", "শিপন"];
-        let dailyMeals = {};
-        let monthlyMeals = {};
+        let dailyMeals = JSON.parse(localStorage.getItem("dailyMeals")) || {}; // স্টোর করা ডেটা রিট্রিভ করুন
+        let monthlyMeals = JSON.parse(localStorage.getItem("monthlyMeals")) || {};
         let selectedDate = new Date().toISOString().split('T')[0]; // আজকের তারিখ
 
         // শুরুতে টেবিল লোড
@@ -89,9 +59,9 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${member}</td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="সকাল"></td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="দুপুর"></td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="রাত"></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="সকাল" ${dailyMeals[member]?.সকাল ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="দুপুর" ${dailyMeals[member]?.দুপুর ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="রাত" ${dailyMeals[member]?.রাত ? "checked" : ""}></td>
                 `;
                 mealTable.appendChild(row);
 
@@ -99,13 +69,17 @@
                 const monthlyRow = document.createElement("tr");
                 monthlyRow.innerHTML = `
                     <td>${member}</td>
-                    <td id="${member}-monthly-count">0</td>
+                    <td id="${member}-monthly-count">${monthlyMeals[member] || 0}</td>
                 `;
                 monthlyMealTable.appendChild(monthlyRow);
 
                 // প্রথমবারের জন্য ডেটা ইন্সট্যান্স তৈরি
-                dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0 };
-                monthlyMeals[member] = 0;
+                if (!dailyMeals[member]) {
+                    dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0 };
+                }
+                if (!monthlyMeals[member]) {
+                    monthlyMeals[member] = 0;
+                }
             });
 
             // তারিখ সেট করুন
@@ -139,6 +113,10 @@
                 monthlyMeals[member] += totalMeals;
                 document.getElementById(`${member}-monthly-count`).innerText = monthlyMeals[member];
             });
+
+            // localStorage এ ডেটা সেভ করুন
+            localStorage.setItem("dailyMeals", JSON.stringify(dailyMeals));
+            localStorage.setItem("monthlyMeals", JSON.stringify(monthlyMeals));
 
             // দৈনিক মিল রিসেট
             Object.keys(dailyMeals).forEach(member => {
