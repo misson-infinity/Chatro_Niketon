@@ -123,49 +123,112 @@
     </table>
 
     <footer>
-        <p>Developed by:Md Habibur Rahman Mahi </p>
+        <p>Developed by: [Your Name or Developer]</p>
     </footer>
 
-    <script>
-        // সদস্যদের নাম তালিকা
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAE3GEe85kVgGjFs-AabYc6iaOIYyEaxqg",
+            authDomain: "mission-infinity.firebaseapp.com",
+            projectId: "mission-infinity",
+            storageBucket: "mission-infinity.firebasestorage.app",
+            messagingSenderId: "226312029801",
+            appId: "1:226312029801:web:bf0a7092df65c505c104f8",
+            measurementId: "G-V3G1C32M1G"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         const members = ["হাবিব", "শামসুল", "রাজু", "তানভীর", "সায়েম", "শিপন"];
         let dailyMeals = {};
         let monthlyMeals = {};
-        let selectedDate = new Date().toISOString().split('T')[0]; // আজকের তারিখ
+        let selectedDate = new Date().toISOString().split('T')[0]; // Today's date
 
-        // টেবিল লোড করার ফাংশন
-        function loadTable() {
-            const mealTable = document.getElementById("mealTable");
-            const monthlyMealTable = document.getElementById("monthlyMealTable");
-
-            // LocalStorage থেকে সেভ করা মিল ডেটা লোড করুন
-            const savedDailyMeals = localStorage.getItem("dailyMeals");
-            const savedMonthlyMeals = localStorage.getItem("monthlyMeals");
-
-            if (savedDailyMeals && savedMonthlyMeals) {
-                dailyMeals = JSON.parse(savedDailyMeals);
-                monthlyMeals = JSON.parse(savedMonthlyMeals);
+        // Load and update meals from Firestore
+        async function loadMealsFromFirestore() {
+            const mealDocRef = doc(db, "mealRecords", selectedDate);
+            const mealDoc = await getDoc(mealDocRef);
+            
+            if (mealDoc.exists()) {
+                dailyMeals = mealDoc.data().dailyMeals || {};
+                monthlyMeals = mealDoc.data().monthlyMeals || {};
             } else {
-                // যদি কোন সেভ করা ডেটা না থাকে, তবে নতুন করে ডেটা ইনিশিয়ালাইজ করুন
+                // If no data exists for today, initialize meals
                 members.forEach(member => {
                     dailyMeals[member] = { Breakfast: 0, Lunch: 0, Dinner: 0 };
                     monthlyMeals[member] = 0;
                 });
             }
 
-            // সদস্যদের জন্য টেবিল তৈরি করুন
+            // Update the UI with data from Firestore
+            updateUIWithMeals();
+        }
+
+        // Save updated meals to Firestore
+        async function updateMealsToFirestore() {
+            const mealDocRef = doc(db, "mealRecords", selectedDate);
+            try {
+                await setDoc(mealDocRef, {
+                    dailyMeals: dailyMeals,
+                    monthlyMeals: monthlyMeals
+                });
+                console.log("Meals updated successfully!");
+            } catch (e) {
+                console.error("Error updating meals: ", e);
+            }
+        }
+
+        // Update daily meal count based on checkboxes
+        function updateMealCount() {
+            const checkboxes = document.querySelectorAll(".meal-checkbox");
+            checkboxes.forEach(checkbox => {
+                const member = checkbox.dataset.name;
+                const time = checkbox.dataset.time;
+
+                if (checkbox.checked) {
+                    dailyMeals[member][time] = (time === "Breakfast") ? 0.5 : 1;
+                } else {
+                    dailyMeals[member][time] = 0;
+                }
+            });
+
+            // Update the monthly total
+            Object.keys(dailyMeals).forEach(member => {
+                const totalMeals = Object.values(dailyMeals[member]).reduce((a, b) => a + b, 0);
+                monthlyMeals[member] += totalMeals;
+            });
+
+            // Save updated data to Firestore
+            updateMealsToFirestore();
+        }
+
+        // Update UI with daily and monthly meal counts
+        function updateUIWithMeals() {
+            const mealTable = document.getElementById("mealTable");
+            const monthlyMealTable = document.getElementById("monthlyMealTable");
+
+            mealTable.innerHTML = ""; // Clear existing rows
+            monthlyMealTable.innerHTML = ""; // Clear existing rows
+
             members.forEach(member => {
-                // দৈনিক মিল টেবিল
+                // Daily meal table
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${member}</td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Breakfast" ${dailyMeals[member].Breakfast > 0 ? "checked" : ""}></td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Lunch" ${dailyMeals[member].Lunch > 0 ? "checked" : ""}></td>
-                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Dinner" ${dailyMeals[member].Dinner > 0 ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Breakfast" ${dailyMeals[member]?.Breakfast > 0 ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Lunch" ${dailyMeals[member]?.Lunch > 0 ? "checked" : ""}></td>
+                    <td><input type="checkbox" class="meal-checkbox" data-name="${member}" data-time="Dinner" ${dailyMeals[member]?.Dinner > 0 ? "checked" : ""}></td>
                 `;
                 mealTable.appendChild(row);
 
-                // মাসিক মিল টেবিল
+                // Monthly meal table
                 const monthlyRow = document.createElement("tr");
                 monthlyRow.innerHTML = `
                     <td>${member}</td>
@@ -174,55 +237,18 @@
                 monthlyMealTable.appendChild(monthlyRow);
             });
 
-            // তারিখ পিকার সেট করুন
+            // Set date picker value
             document.getElementById("datePicker").value = selectedDate;
         }
 
-        // তারিখ পরিবর্তনের ইভেন্ট
+        // Handle date picker change
         document.getElementById("datePicker").addEventListener("change", function () {
             selectedDate = this.value;
-            alert(`তারিখ পরিবর্তন করা হয়েছে: ${selectedDate}`);
+            loadMealsFromFirestore(); // Load meals for the selected date
         });
 
-        // মিল আপডেট করার ফাংশন
-        function updateMealCount() {
-            const checkboxes = document.querySelectorAll(".meal-checkbox");
-            checkboxes.forEach(checkbox => {
-                const member = checkbox.dataset.name;
-                const time = checkbox.dataset.time;
-
-                if (checkbox.checked) {
-                    // সকালের মিল 0.5 এবং অন্যান্য মিল 1 গণনা করা হচ্ছে
-                    dailyMeals[member][time] = (time === "Breakfast") ? 0.5 : 1;
-                } else {
-                    dailyMeals[member][time] = 0;
-                }
-            });
-
-            // মাসিক মিল আপডেট করা হচ্ছে
-            Object.keys(dailyMeals).forEach(member => {
-                const totalMeals = Object.values(dailyMeals[member]).reduce((a, b) => a + b, 0);
-                monthlyMeals[member] += totalMeals;
-                document.getElementById(`${member}-monthly-count`).innerText = monthlyMeals[member];
-            });
-
-            // LocalStorage-এ ডেটা সেভ করা হচ্ছে
-            localStorage.setItem("dailyMeals", JSON.stringify(dailyMeals));
-            localStorage.setItem("monthlyMeals", JSON.stringify(monthlyMeals));
-
-            // দৈনিক মিল রিসেট করা হচ্ছে
-            Object.keys(dailyMeals).forEach(member => {
-                dailyMeals[member] = { Breakfast: 0, Lunch: 0, Dinner: 0 };
-            });
-
-            // চেকবক্স রিসেট করা হচ্ছে
-            checkboxes.forEach(checkbox => checkbox.checked = false);
-
-            alert(`মিল সফলভাবে আপডেট হয়েছে! তারিখ: ${selectedDate}`);
-        }
-
-        // পেজ লোড হলে টেবিল লোড করুন
-        loadTable();
+        // Load meals on page load
+        loadMealsFromFirestore();
     </script>
 </body>
 </html>
