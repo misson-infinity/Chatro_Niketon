@@ -1,0 +1,38 @@
+// Initialize variables
+let totalMeals = 0;
+const maxMealsPerDay = 3; // Breakfast, Lunch, Dinner
+let mealsToday = {
+  breakfast: false,
+  lunch: false,
+  dinner: false,
+};
+
+// Meal button event listeners
+document.getElementById('breakfast-btn').addEventListener('click', () => markMeal('breakfast'));
+document.getElementById('lunch-btn').addEventListener('click', () => markMeal('lunch'));
+document.getElementById('dinner-btn').addEventListener('click', () => markMeal('dinner'));
+
+// Function to mark meals
+function markMeal(meal) {
+  if (!mealsToday[meal]) {
+    mealsToday[meal] = true;
+    totalMeals += meal === 'breakfast' ? 0.5 : 1; // Breakfast = 0.5 meal
+    document.getElementById('total-meals').innerText = totalMeals.toFixed(1);
+  } else {
+    alert('আপনি ইতিমধ্যেই এই মিলটি দাগিয়েছেন।');
+  }
+}
+
+// Member buttons event listener
+const memberButtons = document.querySelectorAll('.member-btn');
+memberButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const memberName = btn.getAttribute('data-name');
+    alert(`${memberName} এর তথ্য শীঘ্রই যুক্ত হবে!`);
+  });
+});
+
+// Market list button event listener
+document.getElementById('market-btn').addEventListener('click', () => {
+  alert('এই মাসের বাজার তালিকা শীঘ্রই যুক্ত হবে!');
+});
