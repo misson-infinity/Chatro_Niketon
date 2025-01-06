@@ -2,23 +2,33 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f9;
+  background-color: #f9f9f9;
   color: #333;
-  text-align: center;
 }
 
 header {
-  background-color: #007BFF;
+  background-color: #007bff;
   color: white;
+  text-align: center;
   padding: 20px;
-}
-
-h1, h2 {
-  margin: 0 0 20px;
 }
 
 main {
   padding: 20px;
+  text-align: center;
+}
+
+h1, h2 {
+  margin: 10px 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin: 10px 0;
 }
 
 button {
@@ -35,16 +45,6 @@ button:hover {
   background-color: #218838;
 }
 
-#meal-input {
-  margin-bottom: 20px;
-}
-
-.member-btn {
-  display: block;
-  margin: 10px auto;
-  background-color: #17a2b8;
-}
-
-.member-btn:hover {
-  background-color: #138496;
+a {
+  text-decoration: none;
 }
