@@ -5,15 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>মেস মিল ট্র্যাকার</title>
     <style>
-        /* স্টাইল এর কোড এখানে রাখুন */
+        /* Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            color: #fff;
+            background-color: #4CAF50;
+            margin: 0;
+            padding: 20px;
+            font-size: 36px;
+        }
+
+        /* Calendar Section */
+        .calendar {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .calendar label {
+            font-size: 18px;
+            color: #333;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            width: 250px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            font-size: 18px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
+        /* Meal Checkbox Styling */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Button Styling */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Monthly Meal Section Styling */
+        h3 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
     </style>
 </head>
 <body>
     <h1>মেস মিল ট্র্যাকার</h1>
+    
+    <!-- Calendar Section -->
     <div class="calendar">
         <label for="datePicker">তারিখ নির্বাচন করুন:</label>
         <input type="date" id="datePicker">
     </div>
+
     <h3>আজকের মিল হিসাব</h3>
     <table>
         <thead>
@@ -28,7 +141,9 @@
             <!-- সদস্যদের তথ্য এখানে ডায়নামিকভাবে যোগ করা হবে -->
         </tbody>
     </table>
+
     <button onclick="updateMealCount()">মিল আপডেট করুন</button>
+
     <h3>মাসিক মিল সংযোগ</h3>
     <table>
         <thead>
@@ -41,6 +156,11 @@
             <!-- মাসিক মিল যোগফল এখানে দেখানো হবে -->
         </tbody>
     </table>
+
+    <footer>
+        <p>Developed by: <strong>Habibur Rahman (Ofa)</strong></p>
+        <p>This is a creative project</p>
+    </footer>
 
     <script>
         // সদস্যদের নাম তালিকা
