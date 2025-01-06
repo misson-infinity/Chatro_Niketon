@@ -1,38 +1,31 @@
-// Initialize variables
+// Show current date and day
+const dateContainer = document.getElementById('current-date');
+const dayContainer = document.getElementById('current-day');
+const today = new Date();
+const days = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
+
+dateContainer.textContent = today.toLocaleDateString('bn-BD');
+dayContainer.textContent = days[today.getDay()];
+
+// Meal Tracking Logic
 let totalMeals = 0;
-const maxMealsPerDay = 3; // Breakfast, Lunch, Dinner
-let mealsToday = {
-  breakfast: false,
-  lunch: false,
-  dinner: false,
-};
+let mealsToday = [];
+const mealList = document.getElementById('meal-list');
 
-// Meal button event listeners
-document.getElementById('breakfast-btn').addEventListener('click', () => markMeal('breakfast'));
-document.getElementById('lunch-btn').addEventListener('click', () => markMeal('lunch'));
-document.getElementById('dinner-btn').addEventListener('click', () => markMeal('dinner'));
-
-// Function to mark meals
-function markMeal(meal) {
-  if (!mealsToday[meal]) {
-    mealsToday[meal] = true;
-    totalMeals += meal === 'breakfast' ? 0.5 : 1; // Breakfast = 0.5 meal
+function markMeal(mealType) {
+  if (!mealsToday.includes(mealType)) {
+    mealsToday.push(mealType);
+    totalMeals += mealType === 'breakfast' ? 0.5 : 1;
     document.getElementById('total-meals').innerText = totalMeals.toFixed(1);
+
+    const listItem = document.createElement('li');
+    listItem.textContent = `${mealType} মিল সিলেক্ট করা হয়েছে।`;
+    mealList.appendChild(listItem);
   } else {
-    alert('আপনি ইতিমধ্যেই এই মিলটি দাগিয়েছেন।');
+    alert(`${mealType} এর জন্য আপনি ইতিমধ্যেই সিলেক্ট করেছেন!`);
   }
 }
 
-// Member buttons event listener
-const memberButtons = document.querySelectorAll('.member-btn');
-memberButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const memberName = btn.getAttribute('data-name');
-    alert(`${memberName} এর তথ্য শীঘ্রই যুক্ত হবে!`);
-  });
-});
-
-// Market list button event listener
-document.getElementById('market-btn').addEventListener('click', () => {
-  alert('এই মাসের বাজার তালিকা শীঘ্রই যুক্ত হবে!');
-});
+document.getElementById('breakfast-btn').addEventListener('click', () => markMeal('সকাল'));
+document.getElementById('lunch-btn').addEventListener('click', () => markMeal('বিকাল'));
+document.getElementById('dinner-btn').addEventListener('click', () => markMeal('রাত'));
