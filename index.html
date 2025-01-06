@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ছাত্র নিকেতন</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>ছাত্র নিকেতন</h1>
+    <h3>এই মাসের ম্যানেজার: <span id="manager-name">মোহাম্মদ সায়েম</span></h3>
+  </header>
+
+  <main>
+    <!-- মিল সিস্টেম -->
+    <section id="meal-section">
+      <h2>মিল গণনা</h2>
+      <div id="meal-input">
+        <button id="breakfast-btn">সকাল</button>
+        <button id="lunch-btn">বিকাল</button>
+        <button id="dinner-btn">রাত</button>
+      </div>
+      <p>আজকের মোট মিল: <span id="total-meals">0</span></p>
+    </section>
+
+    <!-- বাজার তালিকা -->
+    <section id="market-list">
+      <h2>বাজার তালিকা</h2>
+      <button id="market-btn">বাজার তালিকা দেখুন</button>
+    </section>
+
+    <!-- সদস্য তথ্য -->
+    <section id="members-section">
+      <h2>সদস্য</h2>
+      <button class="member-btn" data-name="হাবিবুর রহমান মাহি">হাবিবুর রহমান মাহি</button>
+      <button class="member-btn" data-name="শামসুল ইসলাম">শামসুল ইসলাম</button>
+      <button class="member-btn" data-name="রাজু আহমেদ">রাজু আহমেদ</button>
+      <button class="member-btn" data-name="মোঃ সায়েম">মোঃ সায়েম</button>
+      <button class="member-btn" data-name="শিপন আহমেদ বিশাল">শিপন আহমেদ বিশাল</button>
+      <button class="member-btn" data-name="তানভীর দীপ্ত">তানভীর দীপ্ত</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
