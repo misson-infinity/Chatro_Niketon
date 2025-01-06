@@ -7,41 +7,53 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Header Section -->
   <header>
+    <div id="date-container">
+      <span id="current-date"></span> | <span id="current-day"></span>
+    </div>
+    <div id="last-month-rate">
+      গত মাসের মিল রেট: <span id="meal-rate">39.2</span> টাকা
+    </div>
     <h1>ছাত্র নিকেতন</h1>
-    <h3>এই মাসের ম্যানেজার: <span id="manager-name">মোহাম্মদ সায়েম</span></h3>
   </header>
 
+  <!-- Main Section -->
   <main>
-    <!-- মিল সিস্টেম -->
-    <section id="meal-section">
+    <!-- Meal Tracking Section -->
+    <section id="meal-tracking">
       <h2>মিল গণনা</h2>
-      <div id="meal-input">
+      <div id="meal-buttons">
         <button id="breakfast-btn">সকাল</button>
         <button id="lunch-btn">বিকাল</button>
         <button id="dinner-btn">রাত</button>
       </div>
       <p>আজকের মোট মিল: <span id="total-meals">0</span></p>
+      <h3>কে কখন মিল খাবে:</h3>
+      <ul id="meal-list"></ul>
     </section>
 
-    <!-- বাজার তালিকা -->
+    <!-- Market List Section -->
     <section id="market-list">
       <h2>বাজার তালিকা</h2>
-      <button id="market-btn">বাজার তালিকা দেখুন</button>
+      <a href="market.html"><button>বাজার তালিকা দেখুন</button></a>
     </section>
 
-    <!-- সদস্য তথ্য -->
-    <section id="members-section">
+    <!-- Members Section -->
+    <section id="members">
       <h2>সদস্য</h2>
-      <button class="member-btn" data-name="হাবিবুর রহমান মাহি">হাবিবুর রহমান মাহি</button>
-      <button class="member-btn" data-name="শামসুল ইসলাম">শামসুল ইসলাম</button>
-      <button class="member-btn" data-name="রাজু আহমেদ">রাজু আহমেদ</button>
-      <button class="member-btn" data-name="মোঃ সায়েম">মোঃ সায়েম</button>
-      <button class="member-btn" data-name="শিপন আহমেদ বিশাল">শিপন আহমেদ বিশাল</button>
-      <button class="member-btn" data-name="তানভীর দীপ্ত">তানভীর দীপ্ত</button>
+      <div id="member-buttons">
+        <a href="habibur.html"><button>হাবিবুর রহমান মাহি</button></a>
+        <a href="shamsul.html"><button>শামসুল ইসলাম</button></a>
+        <a href="raju.html"><button>রাজু আহমেদ</button></a>
+        <a href="sayem.html"><button>মোঃ সায়েম</button></a>
+        <a href="shipon.html"><button>শিপন আহমেদ বিশাল</button></a>
+        <a href="tanvir.html"><button>তানভীর দীপ্ত</button></a>
+      </div>
     </section>
   </main>
 
+  <!-- JavaScript File -->
   <script src="script.js"></script>
 </body>
 </html>
