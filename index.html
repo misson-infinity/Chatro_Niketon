@@ -228,10 +228,30 @@
       }
     }
 
-    // When the page loads, request permission and show the notice notification after 2 seconds
+    // Set a specific time to send the notification (1:40 AM)
+    function setNotificationTime() {
+      // Send notification at 1:40 AM today
+      const targetHour = 1; // 1:00 AM
+      const targetMinute = 40;
+
+      const now = new Date();
+      const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetHour, targetMinute, 0, 0);
+
+      // If the target time is already past today, set it for tomorrow
+      if (now > targetTime) {
+        targetTime.setDate(targetTime.getDate() + 1);
+      }
+
+      const timeDifference = targetTime - now;
+
+      // Set a timeout to send the notification at the target time
+      setTimeout(sendNoticeNotification, timeDifference);
+    }
+
+    // When the page loads, request permission and set the notification time
     window.onload = function() {
       requestNotificationPermission(); // Request permission when the page loads
-      setTimeout(sendNoticeNotification, 2000); // Send the notification after 2 seconds
+      setNotificationTime(); // Set the notification time
     };
 
     // Function to set the current date and day
