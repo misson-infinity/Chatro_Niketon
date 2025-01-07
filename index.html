@@ -4,7 +4,141 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ছাত্র নিকেতন</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333333;
+    }
+
+    /* Header Styles */
+    header {
+      background-color: #34495e; /* Muted blue-gray */
+      color: #ecf0f1; /* Light gray */
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 5px 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    header h4 {
+      margin: 5px 0;
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    #date-container {
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #dcdde1; /* Soft gray */
+    }
+
+    #last-month-rate {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #ecf0f1;
+      font-weight: bold;
+    }
+
+    /* Section Styles */
+    section {
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 800px;
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    section h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      color: #2c3e50; /* Dark muted blue */
+      border-bottom: 2px solid #34495e; /* Consistent with header */
+      padding-bottom: 5px;
+    }
+
+    section p {
+      font-size: 16px;
+      color: #555555;
+    }
+
+    /* Button Styles */
+    button {
+      background-color: #2980b9; /* Muted blue */
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1f618d; /* Slightly darker blue */
+    }
+
+    /* Footer Styles */
+    footer {
+      background-color: #2c3e50; /* Dark muted blue */
+      color: #ecf0f1; /* Light gray */
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    footer div {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    /* Specific Section: Notice */
+    #notice {
+      border-left: 5px solid #e74c3c; /* Accent red */
+    }
+
+    #notice-content p {
+      font-size: 16px;
+      color: #c0392b; /* Deeper red for the text */
+      font-weight: bold;
+    }
+
+    /* Specific Section: Bazaar List */
+    #bazaar-content p {
+      font-size: 16px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      section {
+        margin: 10px;
+        padding: 15px;
+      }
+
+      button {
+        width: 100%;
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Header Section -->
@@ -16,14 +150,30 @@
       গত মাসের মিল রেট: <span id="meal-rate">39.2</span> টাকা
     </div>
     <h1>ছাত্র নিকেতন</h1>
-<h4>জানুয়ারি মাসের ম্যাচ ম্যানেজার মোঃ সায়েম</h4>
-
+    <h4>জানুয়ারি মাসের ম্যাচ ম্যানেজার মোঃ সায়েম</h4>
   </header>
+
+  <!-- Notice Section -->
+  <section id="notice">
+    <h2>Notice</h2>
+    <div id="notice-content">
+      <p>পরবর্তী মেস মিটিং অনুষ্ঠিত হবে আগামী শুক্রবার সন্ধ্যা ৭:০০ টায়। সকল সদস্য উপস্থিত থাকার জন্য বিশেষ অনুরোধ।</p>
+    </div>
+  </section>
 
   <!-- Market List Section -->
   <section id="market-list">
     <h2>বাজার তালিকা</h2>
     <a href="market.html"><button>বাজার তালিকা দেখুন</button></a>
+  </section>
+
+  <!-- New Bazaar List Section -->
+  <section id="bazaar-list">
+    <h2>বাজার লিস্ট</h2>
+    <div id="bazaar-content">
+      <p>এ সপ্তাহের দায়িত্বপ্রাপ্ত সদস্য: মোঃ সায়েম</p>
+      <a href="bazaar_list.html"><button>সম্পূর্ণ তালিকা দেখুন</button></a>
+    </div>
   </section>
 
   <!-- Meal Tracking Section -->
@@ -45,13 +195,33 @@
     </div>
   </section>
 
-  <!-- JavaScript File -->
-  <script src="script.js"></script>
-<footer style="background-color: #333; color: white; text-align: center; padding: 20px; position: relative; bottom: 0; width: 100%;">
-  <div style="background-color: rgba(0, 0, 0, 0.7); padding: 10px; border-radius: 10px;">
-    <p style="font-size: 18px; margin: 0;">Developed by: <strong>Habibur Rahman Mahi</strong></p>
-    <p style="font-size: 14px; margin-top: 5px;">This is a creative project</p>
-  </div>
-</footer>
+  <!-- Footer Section -->
+  <footer>
+    <div>
+      <p>Developed by: <strong>Habibur Rahman Mahi</strong></p>
+      <p>This is a creative project</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Function to set the current date and day
+    function updateDate() {
+      const dateContainer = document.getElementById("current-date");
+      const dayContainer = document.getElementById("current-day");
+
+      const today = new Date();
+      const options = { weekday: "long" }; // For day name
+      const dayName = today.toLocaleDateString("bn-BD", options); // Bengali day
+
+      const formattedDate = today.toLocaleDateString("bn-BD"); // Bengali formatted date
+
+      dateContainer.textContent = formattedDate;
+      dayContainer.textContent = dayName;
+    }
+
+    // Call the function when the page loads
+    updateDate();
+  </script>
 </body>
 </html>
