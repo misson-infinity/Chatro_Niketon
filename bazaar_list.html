@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ছাত্র নিকেতন - বাজার হিসাব</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333333;
+    }
+
+    /* Header */
+    header {
+      background-color: #34495e;
+      color: #ecf0f1;
+      text-align: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    /* Bazaar Section */
+    #bazar-section {
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 800px;
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    #bazar-section h2 {
+      font-size: 22px;
+      color: #2c3e50;
+      border-bottom: 2px solid #34495e;
+      padding-bottom: 5px;
+      margin-bottom: 20px;
+    }
+
+    /* Bazaar List Styles */
+    #bazar-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    #bazar-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    #bazar-list li:last-child {
+      border-bottom: none;
+    }
+
+    #add-item-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #add-item-container input, #add-item-container button {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #add-item-container button {
+      background-color: #2980b9;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #add-item-container button:hover {
+      background-color: #1f618d;
+    }
+
+    /* Total Section */
+    #total-expense, #member-expenses {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>বাজার হিসাব</h1>
+  </header>
+
+  <!-- Bazaar Section -->
+  <section id="bazar-section">
+    <h2>বাজারের তালিকা</h2>
+    <ul id="bazar-list">
+      <!-- Items will be dynamically added here -->
+    </ul>
+
+    <div id="add-item-container">
+      <input type="text" id="member-name" placeholder="সদস্যের নাম (উদা. হাবিব)">
+      <input type="number" id="expense-amount" placeholder="বাজার খরচের পরিমাণ (উদা. ২০০)">
+      <button onclick="addBazarItem()">বাজার যোগ করুন</button>
+    </div>
+
+    <div id="total-expense">
+      মোট বাজার খরচ: ০ টাকা
+    </div>
+
+    <div id="member-expenses">
+      <!-- Individual member expenses will be displayed here -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Developed by: <strong>Habibur Rahman Mahi</strong></p>
+  </footer>
+
+  <script>
+    // Variables
+    const bazarList = document.getElementById("bazar-list");
+    const memberNameInput = document.getElementById("member-name");
+    const expenseAmountInput = document.getElementById("expense-amount");
+    const totalExpenseDisplay = document.getElementById("total-expense");
+    const memberExpensesDisplay = document.getElementById("member-expenses");
+
+    let totalExpense = 0; // To keep track of total expense
+    let bazarItems = []; // To store bazar data
+    let memberExpenses = {}; // To track individual expenses
+
+    // Load data from localStorage
+    function loadData() {
+      const storedBazarItems = localStorage.getItem("bazarItems");
+      const storedMemberExpenses = localStorage.getItem("memberExpenses");
+      const storedTotalExpense = localStorage.getItem("totalExpense");
+
+      if (storedBazarItems) {
+        bazarItems = JSON.parse(storedBazarItems);
+      }
+      if (storedMemberExpenses) {
+        memberExpenses = JSON.parse(storedMemberExpenses);
+      }
+      if (storedTotalExpense) {
+        totalExpense = parseFloat(storedTotalExpense);
+      }
+
+      renderBazarList();
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      localStorage.setItem("bazarItems", JSON.stringify(bazarItems));
+      localStorage.setItem("memberExpenses", JSON.stringify(memberExpenses));
+      localStorage.setItem("totalExpense", totalExpense);
+    }
+
+    // Function to render the bazar list
+    function renderBazarList() {
+      bazarList.innerHTML = ""; // Clear the current list
+      bazarItems.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${item.name} - ${item.amount} টাকা 
+          <button onclick="removeBazarItem(${index})" style="color: red; background: none; border: none; cursor: pointer;">&#10006;</button>`;
+        bazarList.appendChild(li);
+      });
+
+      // Update the total expense display
+      totalExpenseDisplay.textContent = `মোট বাজার খরচ: ${totalExpense} টাকা`;
+
+      // Render individual member expenses
+      renderMemberExpenses();
+    }
+
+    // Function to render individual member expenses
+    function renderMemberExpenses() {
+      memberExpensesDisplay.innerHTML = "<h3>সদস্যদের খরচ:</h3>";
+      for (const member in memberExpenses) {
+        const p = document.createElement("p");
+        p.textContent = `${member}: ${memberExpenses[member]} টাকা`;
+        memberExpensesDisplay.appendChild(p);
+      }
+    }
+
+    // Function to add a new item
+    function addBazarItem() {
+      const memberName = memberNameInput.value.trim();
+      const expenseAmount = parseFloat(expenseAmountInput.value);
+
+      if (!memberName || isNaN(expenseAmount) || expenseAmount <= 0) {
+        alert("অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।");
+        return;
+      }
+
+      // Add item to the list
+      bazarItems.push({ name: memberName, amount: expenseAmount });
+
+      // Update individual member expenses
+      if (!memberExpenses[memberName]) {
+        memberExpenses[memberName] = 0;
+      }
+      memberExpenses[memberName] += expenseAmount;
+
+      totalExpense += expenseAmount; // Update total expense
+
+      // Clear input fields
+      memberNameInput.value = "";
+      expenseAmountInput.value = "";
+
+      renderBazarList(); // Re-render the list
+      saveData(); // Save data to localStorage
+    }
+
+    // Function to remove an item
+    function removeBazarItem(index) {
+      const removedItem = bazarItems[index];
+      totalExpense -= removedItem.amount; // Deduct the amount from total
+
+      // Deduct the amount from the specific member's expense
+      memberExpenses[removedItem.name] -= removedItem.amount;
+      if (memberExpenses[removedItem.name] === 0) {
+        delete memberExpenses[removedItem.name]; // Remove member if expense is 0
+      }
+
+      bazarItems.splice(index, 1); // Remove the item from the list
+
+      renderBazarList(); // Re-render the list
+      saveData(); // Save data to localStorage
+    }
+
+    // Initial Render
+    loadData();
+  </script>
+</body>
+</html>
