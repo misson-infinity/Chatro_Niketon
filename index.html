@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ছাত্র নিকেতন</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging.js"></script>
   <style>
     /* General Styles */
     body {
@@ -203,6 +205,81 @@
     </div>
   </footer>
 
+  <!-- Firebase Config -->
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAE3GEe85kVgGjFs-AabYc6iaOIYyEaxqg",
+      authDomain: "mission-infinity.firebaseapp.com",
+      projectId: "mission-infinity",
+      storageBucket: "mission-infinity.firebasestorage.app",
+      messagingSenderId: "226312029801",
+      appId: "1:226312029801:web:bf0a7092df65c505c104f8",
+      measurementId: "G-V3G1C32M1G"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const messaging = firebase.messaging();
+
+    // Request Notification Permission
+    function requestPermission() {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
+
+          // Get FCM Token
+          messaging.getToken({ vapidKey: "BHciUjHCdChKYt1IIMGsd66MeND0l3REe46A3v4ThReBfvzgMpyUSQLpQBX45w50Of8zHdnA0mPyRJiB9R_b6gs" }).then(currentToken => {
+            if (currentToken) {
+              console.log("FCM Token:", currentToken);
+            } else {
+              console.log("No registration token available.");
+            }
+          }).catch(err => {
+            console.log("Error retrieving token:", err);
+          });
+        } else {
+          console.log("Unable to get permission to notify.");
+        }
+      });
+    }
+
+    // Handle Incoming Messages
+    messaging.onMessage(payload => {
+      console.log("Message received: ", payload);
+      new Notification(payload.notification.title, {
+        body: payload.notification.body,
+        icon: payload.notification.icon
+      });
+    });
+
+    // Set Notification at 4:40 AM
+    function setNotificationTime() {
+      const targetHour = 4; // 4:00 AM
+      const targetMinute = 40;
+
+      const now = new Date();
+      const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetHour, targetMinute, 0, 0);
+
+      if (now > targetTime) {
+        targetTime.setDate(targetTime.getDate() + 1);
+      }
+
+      const timeDifference = targetTime - now;
+      setTimeout(() => {
+        new Notification("ছাত্র নিকেতন", {
+          body: "এই আপনার নির্ধারিত নোটিফিকেশন।",
+          icon: "path_to_icon.png"
+        });
+      }, timeDifference);
+    }
+
+    // Call the functions
+    requestPermission();
+    setNotificationTime();
+  </script>
+
   <!-- JavaScript -->
   <script>
     // Notification permission request function
@@ -228,23 +305,19 @@
       }
     }
 
-    // Set a specific time to send the notification (1:40 AM)
+    // Set a specific time to send the notification (4:40 AM)
     function setNotificationTime() {
-      // Send notification at 1:40 AM today
-      const targetHour = 1; // 1:00 AM
+      const targetHour = 4; // 4:00 AM
       const targetMinute = 40;
 
       const now = new Date();
       const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetHour, targetMinute, 0, 0);
 
-      // If the target time is already past today, set it for tomorrow
       if (now > targetTime) {
         targetTime.setDate(targetTime.getDate() + 1);
       }
 
       const timeDifference = targetTime - now;
-
-      // Set a timeout to send the notification at the target time
       setTimeout(sendNoticeNotification, timeDifference);
     }
 
