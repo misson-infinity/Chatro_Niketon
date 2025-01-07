@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ছাত্র নিকেতন - বাজার হিসাব</title>
   <style>
-    /* General Styles */
+    /* Styles */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -14,7 +14,6 @@
       color: #333333;
     }
 
-    /* Header */
     header {
       background-color: #34495e;
       color: #ecf0f1;
@@ -22,12 +21,6 @@
       padding: 20px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    /* Bazaar Section */
     #bazar-section {
       margin: 20px auto;
       padding: 20px;
@@ -45,7 +38,6 @@
       margin-bottom: 20px;
     }
 
-    /* Bazaar List Styles */
     #bazar-list {
       list-style: none;
       padding: 0;
@@ -70,7 +62,7 @@
       margin-top: 20px;
     }
 
-    #add-item-container input, #add-item-container button {
+    #add-item-container select, #add-item-container input, #add-item-container button {
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
@@ -89,15 +81,37 @@
       background-color: #1f618d;
     }
 
-    /* Total Section */
-    #total-expense, #member-expenses {
+    #total-expense {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
       color: #2c3e50;
     }
 
-    /* Footer */
+    #date-section {
+      font-size: 16px;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    #member-expenses {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+
+    #member-expenses ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    #member-expenses li {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+
     footer {
       background-color: #2c3e50;
       color: #ecf0f1;
@@ -121,12 +135,28 @@
   <!-- Bazaar Section -->
   <section id="bazar-section">
     <h2>বাজারের তালিকা</h2>
+
+    <div id="date-section">
+      <span id="current-date"></span> | <span id="current-day"></span>
+    </div>
+
     <ul id="bazar-list">
       <!-- Items will be dynamically added here -->
     </ul>
 
     <div id="add-item-container">
-      <input type="text" id="member-name" placeholder="সদস্যের নাম (উদা. হাবিব)">
+      <!-- Select dropdown for member names -->
+      <select id="member-name">
+        <option value="">সদস্য নির্বাচন করুন</option>
+        <option value="হাবিব">হাবিব</option>
+        <option value="রাজু">রাজু</option>
+        <option value="সায়েম">সায়েম</option>
+        <option value="শামসুল">শামসুল</option>
+        <option value="শিপন">শিপন</option>
+        <option value="তানভীর">তানভীর</option>
+        <option value="মেস">মেস</option>
+      </select>
+      
       <input type="number" id="expense-amount" placeholder="বাজার খরচের পরিমাণ (উদা. ২০০)">
       <button onclick="addBazarItem()">বাজার যোগ করুন</button>
     </div>
@@ -135,9 +165,14 @@
       মোট বাজার খরচ: ০ টাকা
     </div>
 
-    <div id="member-expenses">
-      <!-- Individual member expenses will be displayed here -->
-    </div>
+    <!-- Member-wise Expense -->
+    <section id="member-expenses">
+      <h3>সদস্য অনুযায়ী বাজার খরচ</h3>
+      <ul id="member-expense-list">
+        <!-- Member expenses will be dynamically added here -->
+      </ul>
+    </section>
+
   </section>
 
   <!-- Footer -->
@@ -148,14 +183,22 @@
   <script>
     // Variables
     const bazarList = document.getElementById("bazar-list");
-    const memberNameInput = document.getElementById("member-name");
+    const memberNameSelect = document.getElementById("member-name");
     const expenseAmountInput = document.getElementById("expense-amount");
     const totalExpenseDisplay = document.getElementById("total-expense");
-    const memberExpensesDisplay = document.getElementById("member-expenses");
+    const memberExpenseList = document.getElementById("member-expense-list");
+    const dateSection = document.getElementById("date-section");
 
-    let totalExpense = 0; // To keep track of total expense
-    let bazarItems = []; // To store bazar data
-    let memberExpenses = {}; // To track individual expenses
+    const members = ["হাবিব", "রাজু", "সায়েম", "শামসুল", "শিপন", "তানভীর", "মেস"];
+    let totalExpense = 0; 
+    let bazarItems = []; 
+    let memberExpenses = {};
+
+    // Get current date and day
+    const currentDate = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString('bn-BD', options);
+    dateSection.innerHTML = formattedDate;
 
     // Load data from localStorage
     function loadData() {
@@ -174,6 +217,7 @@
       }
 
       renderBazarList();
+      renderMemberExpenses();
     }
 
     // Save data to localStorage
@@ -185,34 +229,30 @@
 
     // Function to render the bazar list
     function renderBazarList() {
-      bazarList.innerHTML = ""; // Clear the current list
+      bazarList.innerHTML = ""; 
       bazarItems.forEach((item, index) => {
         const li = document.createElement("li");
-        li.innerHTML = `${item.name} - ${item.amount} টাকা 
+        li.innerHTML = `${item.date} | ${item.name} - ${item.amount} টাকা
           <button onclick="removeBazarItem(${index})" style="color: red; background: none; border: none; cursor: pointer;">&#10006;</button>`;
         bazarList.appendChild(li);
       });
 
-      // Update the total expense display
       totalExpenseDisplay.textContent = `মোট বাজার খরচ: ${totalExpense} টাকা`;
-
-      // Render individual member expenses
-      renderMemberExpenses();
     }
 
-    // Function to render individual member expenses
+    // Function to render member-wise expenses
     function renderMemberExpenses() {
-      memberExpensesDisplay.innerHTML = "<h3>সদস্যদের খরচ:</h3>";
+      memberExpenseList.innerHTML = ""; 
       for (const member in memberExpenses) {
-        const p = document.createElement("p");
-        p.textContent = `${member}: ${memberExpenses[member]} টাকা`;
-        memberExpensesDisplay.appendChild(p);
+        const li = document.createElement("li");
+        li.innerHTML = `${member} - ${memberExpenses[member]} টাকা`;
+        memberExpenseList.appendChild(li);
       }
     }
 
     // Function to add a new item
     function addBazarItem() {
-      const memberName = memberNameInput.value.trim();
+      const memberName = memberNameSelect.value.trim();
       const expenseAmount = parseFloat(expenseAmountInput.value);
 
       if (!memberName || isNaN(expenseAmount) || expenseAmount <= 0) {
@@ -220,8 +260,15 @@
         return;
       }
 
+      if (!members.includes(memberName)) {
+        alert("সদস্যের নাম সঠিক নয়।");
+        return;
+      }
+
+      const date = formattedDate;
+
       // Add item to the list
-      bazarItems.push({ name: memberName, amount: expenseAmount });
+      bazarItems.push({ name: memberName, amount: expenseAmount, date: date });
 
       // Update individual member expenses
       if (!memberExpenses[memberName]) {
@@ -229,31 +276,31 @@
       }
       memberExpenses[memberName] += expenseAmount;
 
-      totalExpense += expenseAmount; // Update total expense
+      totalExpense += expenseAmount; 
 
-      // Clear input fields
-      memberNameInput.value = "";
+      memberNameSelect.value = "";
       expenseAmountInput.value = "";
 
-      renderBazarList(); // Re-render the list
-      saveData(); // Save data to localStorage
+      renderBazarList(); 
+      renderMemberExpenses();
+      saveData(); 
     }
 
     // Function to remove an item
     function removeBazarItem(index) {
       const removedItem = bazarItems[index];
-      totalExpense -= removedItem.amount; // Deduct the amount from total
+      totalExpense -= removedItem.amount;
 
-      // Deduct the amount from the specific member's expense
       memberExpenses[removedItem.name] -= removedItem.amount;
       if (memberExpenses[removedItem.name] === 0) {
-        delete memberExpenses[removedItem.name]; // Remove member if expense is 0
+        delete memberExpenses[removedItem.name]; 
       }
 
-      bazarItems.splice(index, 1); // Remove the item from the list
+      bazarItems.splice(index, 1);
 
-      renderBazarList(); // Re-render the list
-      saveData(); // Save data to localStorage
+      renderBazarList();
+      renderMemberExpenses();
+      saveData();
     }
 
     // Initial Render
