@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>মেস মিল ট্র্যাকার</title>
     <style>
+        /* আপনার আগের স্টাইলিং */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
@@ -80,7 +81,6 @@
             width: 90%;
             margin: 0 auto;
         }
-
     </style>
 </head>
 <body>
@@ -125,16 +125,38 @@
     </div>
 
     <script>
-        // সদস্যদের নাম তালিকা
         const members = ["হাবিব", "শামসুল", "রাজু", "তানভীর", "সায়েম", "শিপন"];
         let dailyMeals = {};
         let monthlyMeals = {};
-        let selectedDate = new Date().toISOString().split('T')[0]; // আজকের তারিখ
+        let selectedDate = new Date().toISOString().split('T')[0];
+
+        // Load data from localStorage
+        function loadData() {
+            const storedMonthlyMeals = localStorage.getItem("monthlyMeals");
+            if (storedMonthlyMeals) {
+                monthlyMeals = JSON.parse(storedMonthlyMeals);
+            } else {
+                monthlyMeals = members.reduce((acc, member) => {
+                    acc[member] = 0;
+                    return acc;
+                }, {});
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem("monthlyMeals", JSON.stringify(monthlyMeals));
+        }
 
         // শুরুতে টেবিল লোড
         function loadTable() {
+            loadData();
+
             const mealTable = document.getElementById("mealTable");
             const monthlyMealTable = document.getElementById("monthlyMealTable");
+
+            mealTable.innerHTML = "";
+            monthlyMealTable.innerHTML = "";
 
             members.forEach(member => {
                 // দৈনিক মিল টেবিল
@@ -151,26 +173,17 @@
                 const monthlyRow = document.createElement("tr");
                 monthlyRow.innerHTML = `
                     <td>${member}</td>
-                    <td id="${member}-monthly-count">0</td>
+                    <td id="${member}-monthly-count">${monthlyMeals[member]}</td>
                 `;
                 monthlyMealTable.appendChild(monthlyRow);
 
-                // প্রথমবারের জন্য ডেটা ইন্সট্যান্স তৈরি
                 dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0 };
-                monthlyMeals[member] = 0;
             });
 
-            // তারিখ সেট করুন
             document.getElementById("datePicker").value = selectedDate;
         }
 
-        // তারিখ পরিবর্তনের ইভেন্ট
-        document.getElementById("datePicker").addEventListener("change", function () {
-            selectedDate = this.value;
-            alert(`তারিখ পরিবর্তন করা হয়েছে: ${selectedDate}`);
-        });
-
-        // দৈনিক মিল আপডেট
+        // Update meal count
         function updateMealCount() {
             const checkboxes = document.querySelectorAll(".meal-checkbox");
             checkboxes.forEach(checkbox => {
@@ -178,32 +191,25 @@
                 const time = checkbox.dataset.time;
 
                 if (checkbox.checked) {
-                    // সকালের মিল হাফ গণনা
-                    dailyMeals[member][time] = (time === "সকাল") ? 0.5 : 1;
+                    dailyMeals[member][time] = time === "সকাল" ? 0.5 : 1;
                 } else {
                     dailyMeals[member][time] = 0;
                 }
             });
 
-            // মাসিক মিল আপডেট
             Object.keys(dailyMeals).forEach(member => {
                 const totalMeals = Object.values(dailyMeals[member]).reduce((a, b) => a + b, 0);
                 monthlyMeals[member] += totalMeals;
                 document.getElementById(`${member}-monthly-count`).innerText = monthlyMeals[member];
             });
 
-            // দৈনিক মিল রিসেট
-            Object.keys(dailyMeals).forEach(member => {
-                dailyMeals[member] = { সকাল: 0, দুপুর: 0, রাত: 0 };
-            });
+            saveData();
 
-            // চেকবক্স রিসেট
             checkboxes.forEach(checkbox => checkbox.checked = false);
-
-            alert(`মিল সফলভাবে আপডেট হয়েছে! তারিখ: ${selectedDate}`);
+            alert(`মিল সফলভাবে আপডেট হয়েছে!`);
         }
 
-        // লোড করার সময় টেবিল তৈরি করুন
+        // লোড করার সময়
         loadTable();
     </script>
 </body>
