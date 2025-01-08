@@ -159,7 +159,7 @@
   <section id="notice">
     <h2>Notice</h2>
     <div id="notice-content">
-      <p>পরবর্তী মেস মিটিং অনুষ্ঠিত হবে আগামী শুক্রবার সন্ধ্যা ৭:০০ টায়। সকল সদস্য উপস্থিত থাকার জন্য বিশেষ অনুরোধ।</p>
+      <p>আগামী ১০ তারিখের ভিতরে শিপন ভাই, সায়েম ভাই, রাজু ভাই, তানভীর সহ সবাইকে বকেয়া পরিষদের জন্য অনুরোধ করা হলো। অনুরোধক্রমে: ম্যাচ কর্তৃপক্ষ।</p>
     </div>
   </section>
 
@@ -296,7 +296,7 @@
     // Function to send the notice as a notification
     function sendNoticeNotification() {
       if (Notification.permission === "granted") {
-        const noticeText = "পরবর্তী মেস মিটিং অনুষ্ঠিত হবে আগামী শুক্রবার সন্ধ্যা ৭:০০ টায়। সকল সদস্য উপস্থিত থাকার জন্য বিশেষ অনুরোধ।";
+        const noticeText = "আগামী ১০ তারিখের ভিতরে শিপন ভাই, সায়েম ভাই, রাজু ভাই, তানভীর সহ সবাইকে বকেয়া পরিষদের জন্য অনুরোধ করা হলো। অনুরোধক্রমে: ম্যাচ কর্তৃপক্ষ।";
         
         new Notification("ছাত্র নিকেতন - Notice", {
           body: noticeText,
@@ -305,10 +305,10 @@
       }
     }
 
-    // Set a specific time to send the notification (4:40 AM)
+    // Set a specific time to send the notification (10:4 AM)
     function setNotificationTime() {
-      const targetHour = 4; // 4:00 AM
-      const targetMinute = 40;
+      const targetHour = 10; // 10:00 AM
+      const targetMinute = 4;
 
       const now = new Date();
       const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetHour, targetMinute, 0, 0);
