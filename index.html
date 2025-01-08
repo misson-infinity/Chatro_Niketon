@@ -6,6 +6,7 @@
   <title>ছাত্র নিকেতন</title>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <style>
     /* General Styles */
     body {
@@ -48,6 +49,17 @@
       font-size: 16px;
       color: #ecf0f1;
       font-weight: bold;
+      animation: slideLeft 10s linear infinite; /* Slow down the animation */
+    }
+
+    /* Keyframe Animation */
+    @keyframes slideLeft {
+      0% {
+        transform: translateX(100%); /* Start from right */
+      }
+      100% {
+        transform: translateX(-100%); /* Move to the left */
+      }
     }
 
     /* Section Styles */
@@ -83,10 +95,17 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
     }
 
     button:hover {
       background-color: #1f618d;
+    }
+
+    button i {
+      margin-right: 8px; /* Space between icon and text */
+      font-size: 18px;
     }
 
     /* Footer Styles */
@@ -128,6 +147,19 @@
       margin-bottom: 10px;
     }
 
+    /* Specific Section: Meal Tracking */
+    #meal-tracking p {
+      font-size: 16px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    /* Specific Section: Members */
+    #member-buttons a {
+      display: inline-block;
+      margin: 5px;
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       section {
@@ -146,62 +178,62 @@
   <!-- Header Section -->
   <header>
     <div id="date-container">
-      <span id="current-date"></span> | <span id="current-day"></span>
+      <i class="fas fa-calendar-day"></i> <span id="current-date"></span> | <span id="current-day"></span>
     </div>
     <div id="last-month-rate">
-      গত মাসের মিল রেট: <span id="meal-rate">39.2</span> টাকা
+      <i class="fas fa-calendar-alt"></i> গত মাসের মিল রেট: <span id="meal-rate">39.2</span> টাকা
     </div>
-    <h1>ছাত্র নিকেতন</h1>
-    <h4>জানুয়ারি মাসের ম্যাচ ম্যানেজার মোঃ সায়েম</h4>
+    <h1><i class="fas fa-user-graduate"></i> ছাত্র নিকেতন</h1>
+    <h4><i class="fas fa-user-tie"></i> জানুয়ারি মাসের ম্যাচ ম্যানেজার মোঃ সায়েম</h4>
   </header>
 
   <!-- Notice Section -->
   <section id="notice">
-    <h2>Notice</h2>
+    <h2><i class="fas fa-exclamation-circle"></i> Notice</h2>
     <div id="notice-content">
-      <p>আগামী ১০ তারিখের ভিতরে শিপন ভাই, সায়েম ভাই, রাজু ভাই, তানভীর সহ সবাইকে বকেয়া পরিষদের জন্য অনুরোধ করা হলো। অনুরোধক্রমে: ম্যাচ কর্তৃপক্ষ।</p>
+      <p><i class="fas fa-info-circle"></i> আগামী ১০ তারিখের ভিতরে শিপন ভাই, সায়েম ভাই, রাজু ভাই, তানভীর সহ সবাইকে বকেয়া পরিষদের জন্য অনুরোধ করা হলো। অনুরোধক্রমে: ম্যাচ কর্তৃপক্ষ।</p>
     </div>
   </section>
 
   <!-- Market List Section -->
   <section id="market-list">
-    <h2>বাজার তালিকা</h2>
-    <a href="market.html"><button>বাজার তালিকা দেখুন</button></a>
+    <h2><i class="fas fa-cart-plus"></i> বাজার তালিকা</h2>
+    <a href="market.html"><button><i class="fas fa-shopping-cart"></i> বাজার তালিকা দেখুন</button></a> <!-- Icon added to the button -->
   </section>
 
   <!-- New Bazaar List Section -->
   <section id="bazaar-list">
-    <h2>বাজার লিস্ট</h2>
+    <h2><i class="fas fa-list-alt"></i> বাজার লিস্ট</h2>
     <div id="bazaar-content">
-      <p>এ সপ্তাহের দায়িত্বপ্রাপ্ত সদস্য: মোঃ সায়েম</p>
-      <a href="bazaar_list.html"><button>সম্পূর্ণ তালিকা দেখুন</button></a>
+      <p><i class="fas fa-user-check"></i> এ সপ্তাহের দায়িত্বপ্রাপ্ত সদস্য: মোঃ সায়েম</p>
+      <a href="bazaar_list.html"><button><i class="fas fa-list"></i> সম্পূর্ণ তালিকা দেখুন</button></a> <!-- Icon added to the button -->
     </div>
   </section>
 
   <!-- Meal Tracking Section -->
   <section id="meal-tracking">
-    <h2>মিল ট্র্যাকিং</h2>
-    <a href="meal_tracking.html"><button>মিল ট্র্যাকিং দেখুন</button></a>
+    <h2><i class="fas fa-calendar-check"></i> মিল ট্র্যাকিং</h2>
+    <a href="meal_tracking.html"><button><i class="fas fa-calendar-day"></i> মিল ট্র্যাকিং দেখুন</button></a> <!-- Icon added to the button -->
   </section>
 
   <!-- Members Section -->
   <section id="members">
-    <h2>সদস্য</h2>
+    <h2><i class="fas fa-users"></i> সদস্য</h2>
     <div id="member-buttons">
-      <a href="habibur.html"><button>হাবিবুর রহমান মাহি</button></a>
-      <a href="shamsul.html"><button>শামসুল ইসলাম</button></a>
-      <a href="raju.html"><button>রাজু আহমেদ</button></a>
-      <a href="sayem.html"><button>মোঃ সায়েম</button></a>
-      <a href="shipon.html"><button>শিপন আহমেদ বিশাল</button></a>
-      <a href="tanvir.html"><button>তানভীর দীপ্ত</button></a>
+      <a href="habibur.html"><button><i class="fas fa-user"></i> হাবিবুর রহমান মাহি</button></a> <!-- Icon added to the button -->
+      <a href="shamsul.html"><button><i class="fas fa-user"></i> শামসুল ইসলাম</button></a> <!-- Icon added to the button -->
+      <a href="raju.html"><button><i class="fas fa-user"></i> রাজু আহমেদ</button></a> <!-- Icon added to the button -->
+      <a href="sayem.html"><button><i class="fas fa-user"></i> মোঃ সায়েম</button></a> <!-- Icon added to the button -->
+      <a href="shipon.html"><button><i class="fas fa-user"></i> শিপন আহমেদ বিশাল</button></a> <!-- Icon added to the button -->
+      <a href="tanvir.html"><button><i class="fas fa-user"></i> তানভীর দীপ্ত</button></a> <!-- Icon added to the button -->
     </div>
   </section>
 
   <!-- Footer Section -->
   <footer>
     <div>
-      <p>Developed by: <strong>Habibur Rahman Mahi</strong></p>
-      <p>This is a creative project</p>
+      <p><i class="fas fa-cogs"></i> Developed by: <strong>Habibur Rahman Mahi</strong></p>
+      <p><i class="fas fa-info-circle"></i> This is a creative project</p>
     </div>
   </footer>
 
@@ -228,17 +260,6 @@
       Notification.requestPermission().then(permission => {
         if (permission === "granted") {
           console.log("Notification permission granted.");
-
-          // Get FCM Token
-          messaging.getToken({ vapidKey: "BHciUjHCdChKYt1IIMGsd66MeND0l3REe46A3v4ThReBfvzgMpyUSQLpQBX45w50Of8zHdnA0mPyRJiB9R_b6gs" }).then(currentToken => {
-            if (currentToken) {
-              console.log("FCM Token:", currentToken);
-            } else {
-              console.log("No registration token available.");
-            }
-          }).catch(err => {
-            console.log("Error retrieving token:", err);
-          });
         } else {
           console.log("Unable to get permission to notify.");
         }
@@ -254,96 +275,9 @@
       });
     });
 
-    // Set Notification at 4:40 AM
-    function setNotificationTime() {
-      const targetHour = 4; // 4:00 AM
-      const targetMinute = 40;
-
-      const now = new Date();
-      const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetHour, targetMinute, 0, 0);
-
-      if (now > targetTime) {
-        targetTime.setDate(targetTime.getDate() + 1);
-      }
-
-      const timeDifference = targetTime - now;
-      setTimeout(() => {
-        new Notification("ছাত্র নিকেতন", {
-          body: "এই আপনার নির্ধারিত নোটিফিকেশন।",
-          icon: "path_to_icon.png"
-        });
-      }, timeDifference);
-    }
-
     // Call the functions
     requestPermission();
-    setNotificationTime();
   </script>
 
-  <!-- JavaScript -->
-  <script>
-    // Notification permission request function
-    function requestNotificationPermission() {
-      if (Notification.permission !== "granted") {
-        Notification.requestPermission().then(function(permission) {
-          if (permission === "granted") {
-            console.log("Notification permission granted.");
-          }
-        });
-      }
-    }
-
-    // Function to send the notice as a notification
-    function sendNoticeNotification() {
-      if (Notification.permission === "granted") {
-        const noticeText = "আগামী ১০ তারিখের ভিতরে শিপন ভাই, সায়েম ভাই, রাজু ভাই, তানভীর সহ সবাইকে বকেয়া পরিষদের জন্য অনুরোধ করা হলো। অনুরোধক্রমে: ম্যাচ কর্তৃপক্ষ।";
-        
-        new Notification("ছাত্র নিকেতন - Notice", {
-          body: noticeText,
-          icon: "path_to_icon.png"  // Optional: Add an icon here
-        });
-      }
-    }
-
-    // Set a specific time to send the notification (10:07 AM)
-    function setNotificationTime() {
-      const targetHour = 10; // 10:00 AM
-      const targetMinute = 07;
-
-      const now = new Date();
-      const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetHour, targetMinute, 0, 0);
-
-      if (now > targetTime) {
-        targetTime.setDate(targetTime.getDate() + 1);
-      }
-
-      const timeDifference = targetTime - now;
-      setTimeout(sendNoticeNotification, timeDifference);
-    }
-
-    // When the page loads, request permission and set the notification time
-    window.onload = function() {
-      requestNotificationPermission(); // Request permission when the page loads
-      setNotificationTime(); // Set the notification time
-    };
-
-    // Function to set the current date and day
-    function updateDate() {
-      const dateContainer = document.getElementById("current-date");
-      const dayContainer = document.getElementById("current-day");
-
-      const today = new Date();
-      const options = { weekday: "long" }; // For day name
-      const dayName = today.toLocaleDateString("bn-BD", options); // Bengali day
-
-      const formattedDate = today.toLocaleDateString("bn-BD"); // Bengali formatted date
-
-      dateContainer.textContent = formattedDate;
-      dayContainer.textContent = dayName;
-    }
-
-    // Call the function when the page loads
-    updateDate();
-  </script>
 </body>
 </html>
