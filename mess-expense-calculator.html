@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mess Expense Calculator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .input-group {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    label {
+      flex: 1;
+      margin-right: 10px;
+    }
+    input, select {
+      flex: 2;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f8ff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .result p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mess Expense Calculator</h1>
+  <div class="container">
+    <h2>Input Expenses and Bills</h2>
+    <div class="input-group">
+      <label for="month">Select Month:</label>
+      <select id="month">
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+      </select>
+    </div>
+    <div id="inputs">
+      <!-- Members' Expense and Meals Input -->
+      <div class="input-group">
+        <label for="habibExpense">Habib's Expense:</label>
+        <input type="number" id="habibExpense" placeholder="Enter Habib's bazar cost">
+      </div>
+      <div class="input-group">
+        <label for="habibMeals">Habib's Meals:</label>
+        <input type="number" id="habibMeals" placeholder="Enter Habib's meals">
+      </div>
+      <div class="input-group">
+        <label for="rajuExpense">Raju's Expense:</label>
+        <input type="number" id="rajuExpense" placeholder="Enter Raju's bazar cost">
+      </div>
+      <div class="input-group">
+        <label for="rajuMeals">Raju's Meals:</label>
+        <input type="number" id="rajuMeals" placeholder="Enter Raju's meals">
+      </div>
+      <div class="input-group">
+        <label for="samsulExpense">Samsul's Expense:</label>
+        <input type="number" id="samsulExpense" placeholder="Enter Samsul's bazar cost">
+      </div>
+      <div class="input-group">
+        <label for="samsulMeals">Samsul's Meals:</label>
+        <input type="number" id="samsulMeals" placeholder="Enter Samsul's meals">
+      </div>
+      <div class="input-group">
+        <label for="saimExpense">Saim's Expense:</label>
+        <input type="number" id="saimExpense" placeholder="Enter Saim's bazar cost">
+      </div>
+      <div class="input-group">
+        <label for="saimMeals">Saim's Meals:</label>
+        <input type="number" id="saimMeals" placeholder="Enter Saim's meals">
+      </div>
+      <div class="input-group">
+        <label for="shiponExpense">Shipon's Expense:</label>
+        <input type="number" id="shiponExpense" placeholder="Enter Shipon's bazar cost">
+      </div>
+      <div class="input-group">
+        <label for="shiponMeals">Shipon's Meals:</label>
+        <input type="number" id="shiponMeals" placeholder="Enter Shipon's meals">
+      </div>
+      <div class="input-group">
+        <label for="tanvirExpense">Tanvir's Expense:</label>
+        <input type="number" id="tanvirExpense" placeholder="Enter Tanvir's bazar cost">
+      </div>
+      <div class="input-group">
+        <label for="tanvirMeals">Tanvir's Meals:</label>
+        <input type="number" id="tanvirMeals" placeholder="Enter Tanvir's meals">
+      </div>
+      <!-- Other Bills -->
+      <div class="input-group">
+        <label for="rent">House Rent:</label>
+        <input type="number" id="rent" placeholder="Enter house rent">
+      </div>
+      <div class="input-group">
+        <label for="electricity">Electricity Bill:</label>
+        <input type="number" id="electricity" placeholder="Enter electricity bill">
+      </div>
+      <div class="input-group">
+        <label for="wifi">WiFi Bill:</label>
+        <input type="number" id="wifi" placeholder="Enter WiFi bill">
+      </div>
+      <div class="input-group">
+        <label for="maid">Maid's Salary:</label>
+        <input type="number" id="maid" placeholder="Enter maid's salary">
+      </div>
+      <div class="input-group">
+        <label for="other">Other Expenses:</label>
+        <input type="number" id="other" placeholder="Enter other expenses">
+      </div>
+    </div>
+    <button onclick="calculate()">Calculate</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      // Load stored data
+      const month = localStorage.getItem('month') || 'January';
+      document.getElementById('month').value = month;
+
+      const expenseFields = ['habibExpense', 'habibMeals', 'rajuExpense', 'rajuMeals', 
+                             'samsulExpense', 'samsulMeals', 'saimExpense', 'saimMeals', 
+                             'shiponExpense', 'shiponMeals', 'tanvirExpense', 'tanvirMeals',
+                             'rent', 'electricity', 'wifi', 'maid', 'other'];
+      expenseFields.forEach(field => {
+        const value = localStorage.getItem(field) || '';
+        document.getElementById(field).value = value;
+      });
+    };
+
+    function calculate() {
+      // Save data to local storage
+      localStorage.setItem('month', document.getElementById('month').value);
+
+      const expenseFields = ['habibExpense', 'habibMeals', 'rajuExpense', 'rajuMeals', 
+                             'samsulExpense', 'samsulMeals', 'saimExpense', 'saimMeals', 
+                             'shiponExpense', 'shiponMeals', 'tanvirExpense', 'tanvirMeals',
+                             'rent', 'electricity', 'wifi', 'maid', 'other'];
+      expenseFields.forEach(field => {
+        localStorage.setItem(field, document.getElementById(field).value);
+      });
+
+      // Fetch expenses and meals for each member
+      const members = [
+        { name: 'Habib', expense: parseFloat(document.getElementById('habibExpense').value) || 0, meals: parseFloat(document.getElementById('habibMeals').value) || 0 },
+        { name: 'Raju', expense: parseFloat(document.getElementById('rajuExpense').value) || 0, meals: parseFloat(document.getElementById('rajuMeals').value) || 0 },
+        { name: 'Samsul', expense: parseFloat(document.getElementById('samsulExpense').value) || 0, meals: parseFloat(document.getElementById('samsulMeals').value) || 0 },
+        { name: 'Saim', expense: parseFloat(document.getElementById('saimExpense').value) || 0, meals: parseFloat(document.getElementById('saimMeals').value) || 0 },
+        { name: 'Shipon', expense: parseFloat(document.getElementById('shiponExpense').value) || 0, meals: parseFloat(document.getElementById('shiponMeals').value) || 0 },
+        { name: 'Tanvir', expense: parseFloat(document.getElementById('tanvirExpense').value) || 0, meals: parseFloat(document.getElementById('tanvirMeals').value) || 0 },
+      ];
+
+      // Fetch other expenses
+      const rent = parseFloat(document.getElementById('rent').value) || 0;
+      const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+      const wifi = parseFloat(document.getElementById('wifi').value) || 0;
+      const maid = parseFloat(document.getElementById('maid').value) || 0;
+      const other = parseFloat(document.getElementById('other').value) || 0;
+
+      const totalBills = rent + electricity + wifi + maid + other;
+
+      // Calculate total expense and total meals
+      const totalExpense = members.reduce((sum, member) => sum + member.expense, 0);
+      const totalMeals = members.reduce((sum, member) => sum + member.meals, 0);
+      const mealRate = totalExpense / totalMeals;
+
+      // Calculate per member's share of bills
+      const perMemberBill = totalBills / members.length;
+
+      // Generate individual balances
+      let resultHtml = `<p>Total Expense: ${totalExpense.toFixed(2)} Taka</p>`;
+      resultHtml += `<p>Total Meals: ${totalMeals}</p>`;
+      resultHtml += `<p>Meal Rate: ${mealRate.toFixed(2)} Taka per meal</p>`;
+      resultHtml += `<p>Total Bills: ${totalBills.toFixed(2)} Taka</p>`;
+      resultHtml += `<p>Per Member Bill: ${perMemberBill.toFixed(2)} Taka</p>`;
+      resultHtml += '<h3>Member-wise Breakdown:</h3>';
+
+      members.forEach(member => {
+        const foodCost = member.meals * mealRate;
+        const totalCost = foodCost + perMemberBill;
+        const finalBalance = member.expense - totalCost;
+
+        resultHtml += `<p>${member.name}: Meals = ${member.meals}, Expense = ${member.expense.toFixed(2)}, Food Cost = ${foodCost.toFixed(2)}, Total Cost = ${totalCost.toFixed(2)}, Final Balance = ${finalBalance.toFixed(2)} Taka</p>`;
+      });
+
+      document.getElementById('result').innerHTML = resultHtml;
+    }
+  </script>
+</body>
+</html>
