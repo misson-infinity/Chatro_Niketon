@@ -3,30 +3,279 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>বাজার তালিকা</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>মেস ম্যানেজমেন্ট</title>
+  <style>
+    /* আপনার পূর্ববর্তী CSS কোড */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #0056b3;
+    }
+
+    select {
+      padding: 8px 12px;
+      font-size: 16px;
+      margin: 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 10px;
+    }
+
+    th {
+      background-color: #0056b3;
+      color: white;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .total-row {
+      font-weight: bold;
+      background-color: #0056b3;
+      color: white;
+    }
+
+    button {
+      background-color: #0056b3;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #003f7f;
+    }
+
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
+    }
+
+    /* Footer Styling */
+    footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      background-color: #0056b3;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>বাজার তালিকা</h1>
-  </header>
-  <main>
-    <ul>
-      <li>১) হাবিবুর রহমান মাহি - ১ থেকে ৫ তারিখ পর্যন্ত</li>
-      <li>২) শামসুল ইসলাম - ৬ থেকে ১০ তারিখ পর্যন্ত</li>
-      <li>৩) রাজু আহমেদ - ১১ থেকে ১৫ তারিখ পর্যন্ত</li>
-      <li>৪) মোঃ সায়েম - ১৬ থেকে ২০ তারিখ পর্যন্ত</li>
-      <li>৫) শিপন আহমেদ বিশাল - ২১ থেকে ২৫ তারিখ পর্যন্ত</li>
-      <li>৬) তানভীর দীপ্ত - ২৬ থেকে ৩০ তারিখ পর্যন্ত</li>
-    </ul>
-    <a href="index.html"><button>পেছনে যান</button></a>
-  </main>
-<!-- Footer Section -->
+  <h1>মাসিক মিল হিসাব</h1>
+
+  <label for="month">মাস নির্বাচন করুন:</label>
+  <select id="month" onchange="generateTable()">
+    <option value="">-- মাস নির্বাচন করুন --</option>
+    <option value="0">জানুয়ারি</option>
+    <option value="1">ফেব্রুয়ারি</option>
+    <option value="2">মার্চ</option>
+    <option value="3">এপ্রিল</option>
+    <option value="4">মে</option>
+    <option value="5">জুন</option>
+    <option value="6">জুলাই</option>
+    <option value="7">আগস্ট</option>
+    <option value="8">সেপ্টেম্বর</option>
+    <option value="9">অক্টোবর</option>
+    <option value="10">নভেম্বর</option>
+    <option value="11">ডিসেম্বর</option>
+  </select>
+
+  <div id="table-container"></div>
+
+  <button onclick="calculateTotal()">মোট মিল দেখুন</button>
+  <button onclick="generatePDF()">PDF রিপোর্ট তৈরি করুন</button>
+  <button onclick="generateChart()">চার্ট তৈরি করুন</button>
+
+  <div id="total-summary" style="margin-top: 20px; font-size: 18px; font-weight: bold;"></div>
+
+  <canvas id="mealChart" style="margin-top: 20px;"></canvas>
+
+  <script>
+    const members = ["Habib", "Raju", "Samsul", "Saim", "Shipon", "Anwar"];
+    const tableContainer = document.getElementById("table-container");
+    const totalSummary = document.getElementById("total-summary");
+
+    function loadFromStorage(month) {
+      const savedData = JSON.parse(localStorage.getItem(`meals-${month}`)) || {};
+      return savedData;
+    }
+
+    function saveToStorage(month, data) {
+      localStorage.setItem(`meals-${month}`, JSON.stringify(data));
+    }
+
+    function generateTable() {
+      const selectedMonth = document.getElementById("month").value;
+      if (!selectedMonth) {
+        tableContainer.innerHTML = "";
+        totalSummary.innerHTML = "";
+        return;
+      }
+
+      const year = new Date().getFullYear();
+      const daysInMonth = new Date(year, parseInt(selectedMonth) + 1, 0).getDate();
+
+      const savedData = loadFromStorage(selectedMonth);
+
+      let tableHTML = `<table>
+        <tr>
+          <th>তারিখ</th>
+          ${members.map(member => `<th>${member}</th>`).join("")}
+          <th>মোট</th>
+        </tr>`;
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        tableHTML += `<tr>
+          <td>${day}</td>
+          ${members
+            .map(
+              member => `
+              <td>
+                <input type="number" id="${member}-day-${day}" value="${
+                savedData[member]?.[day - 1] || 0
+              }" onchange="saveMeal('${member}', ${day})" min="0" style="width: 60px; text-align: center;">
+              </td>`
+            )
+            .join("")}
+          <td id="day-total-${day}">0</td>
+        </tr>`;
+      }
+
+      tableHTML += `<tr class="total-row">
+        <td>মোট</td>
+        ${members.map(member => `<td id="${member}-total">0</td>`).join("")}
+        <td id="grand-total">0</td>
+      </tr></table>`;
+
+      tableContainer.innerHTML = tableHTML;
+    }
+
+    function saveMeal(member, day) {
+      const selectedMonth = document.getElementById("month").value;
+      const savedData = loadFromStorage(selectedMonth);
+
+      if (!savedData[member]) savedData[member] = [];
+      const value = parseFloat(document.getElementById(`${member}-day-${day}`).value) || 0;
+      savedData[member][day - 1] = value;
+
+      saveToStorage(selectedMonth, savedData);
+    }
+
+    function calculateTotal() {
+      const selectedMonth = document.getElementById("month").value;
+      const savedData = loadFromStorage(selectedMonth);
+
+      let grandTotal = 0;
+
+      members.forEach(member => {
+        const memberTotal = (savedData[member] || []).reduce((sum, val) => sum + val, 0);
+        document.getElementById(`${member}-total`).innerText = memberTotal;
+        grandTotal += memberTotal;
+      });
+
+      document.getElementById("grand-total").innerText = grandTotal;
+      totalSummary.innerHTML = `মোট মিল: ${grandTotal}`;
+    }
+
+    function generatePDF() {
+      const doc = new jsPDF();
+
+      doc.text("মেস ম্যানেজমেন্ট রিপোর্ট", 20, 20);
+      const selectedMonth = document.getElementById("month").value;
+      const savedData = loadFromStorage(selectedMonth);
+
+      let pdfContent = "তারিখ\t" + members.join("\t") + "\tমোট\n";
+
+      for (let day = 1; day <= 31; day++) {
+        let row = `${day}`;
+        let dailyTotal = 0;
+
+        members.forEach(member => {
+          const value = savedData[member]?.[day - 1] || 0;
+          row += `\t${value}`;
+          dailyTotal += value;
+        });
+
+        row += `\t${dailyTotal}`;
+        pdfContent += row + "\n";
+      }
+
+      doc.text(pdfContent, 20, 30);
+      doc.save("meal-report.pdf");
+    }
+
+    function generateChart() {
+      const selectedMonth = document.getElementById("month").value;
+      const savedData = loadFromStorage(selectedMonth);
+
+      const chartData = members.map(member => {
+        return (savedData[member] || []).reduce((sum, val) => sum + val, 0);
+      });
+
+      const ctx = document.getElementById("mealChart").getContext("2d");
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: members,
+          datasets: [{
+            label: 'মোট মিল',
+            data: chartData,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
+
+  <!-- Footer -->
   <footer>
-    <div>
-      <p><i class="fas fa-cogs"></i> Developed by: <strong>Habibur Rahman Mahi</strong></p>
-      <p><i class="fas fa-info-circle"></i> This is a creative project</p>
-    </div>
+    <p>© 2025 মেস ম্যানেজমেন্ট | সর্বস্বত্ব সংরক্ষিত</p>
   </footer>
 </body>
 </html>
